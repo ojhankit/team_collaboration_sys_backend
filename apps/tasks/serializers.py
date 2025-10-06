@@ -1,12 +1,13 @@
 from rest_framework import serializers
 from .models import Task
+from apps.users.models import UserModel
 from django.utils import timezone
 
 class TaskSerializer(serializers.ModelSerializer):
     assigned_by = serializers.StringRelatedField(read_only=True)  # show username/email
     assigned_to = serializers.PrimaryKeyRelatedField(
         many=True,
-        queryset=None  # will set dynamically in view
+        queryset=UserModel.objects.filter(role='EMPLOYEE')  # only employees  # will set dynamically in view
     )
     
     class Meta:
