@@ -1,7 +1,16 @@
 from rest_framework import serializers
-from .models import Task
+from .models import Task, TaskAttachment
 from apps.users.models import UserModel
 from django.utils import timezone
+
+class TaskAttachementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TaskAttachment
+        fields = [
+            'id',
+            'file',
+            'uploaded_at'
+        ]
 
 class TaskSerializer(serializers.ModelSerializer):
     assigned_by = serializers.StringRelatedField(read_only=True)  # show username/email
