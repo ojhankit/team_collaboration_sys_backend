@@ -7,7 +7,8 @@ from .serializers import TaskSerializer
 from .permissions import TaskPermission
 from .pagination import TaskPagination
 from datetime import datetime
-
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 @api_view(['POST'])
 @permission_classes([TaskPermission])
@@ -25,6 +26,21 @@ def create_task(request):
         for f in files:
             TaskAttachment.objects.create(task=task, file=f)
         
+        # notification code
+        channel_layer = get_channel_layer()
+        for employee in task.assigned_to.all():
+            async_to_sync(channel_layer.group_send)(
+                f"user_{employee.id}",
+                {
+                    'type': 'send_notification',
+                    'message': {
+                        'title': 'New Task Assigned',
+                        'task_id': task.id,
+                        'task_title': task.title,
+                        'assigned_by': request.user.username,
+                    }
+                }
+            )
         return Response(TaskSerializer(task, context={'request': request}).data,
                         status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
