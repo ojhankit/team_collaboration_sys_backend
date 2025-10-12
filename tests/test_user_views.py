@@ -39,7 +39,7 @@ class UserAPITest(APITestCase):
         self.assertIn("email", response.data)
 
     def test_login_user_success(self):
-        url = reverse('login_user')  # Use your URL name
+        url = reverse('login_user') 
         response = self.client.post(url, {"identifier": "bob", "password": "bobpass"}, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn("access", response.data)
