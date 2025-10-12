@@ -1,8 +1,11 @@
-#!/bin/sh
-set -e
+# #!/bin/bash
+# # entrypoint.sh
 
-python manage.py collectstatic --noinput || true
+# # Apply migrations
+# python manage.py migrate
 
-python manage.py migrate --noinput
+# # Collect static files (if needed)
+# python manage.py collectstatic --noinput
 
-exec daphne -b 0.0.0.0 -p 8000 config.asgi:application
+# # Start ASGI server
+# daphne -b 0.0.0.0 -p 8000 config.asgi:application
