@@ -29,21 +29,36 @@ schema_view = get_schema_view(
         default_version='v1',
         description="""
         # 🚀 Team Collaboration API Documentation
-        
+
         ## 🔐 Quick Start - Authentication
-        
-        ### Step 1: Get Your Token
-        Visit `/api/users/demo/login/` to get demo JWT tokens for testing.
-        
-        ### Step 2: Authorize in Swagger
-        1. Click the **🔓 Authorize** button (top right of this page)
-        2. In the popup, enter your token in this format:
-           ```
-           Bearer <your_access_token>
-           ```
-        3. Click **Authorize**, then **Close**
-        4. You're all set! ✅
-        
+
+        ### Step 1: Test Users
+        I have added a few users of all roles for testing purposes. Use the following credentials:
+
+        **Admin**
+
+        1. username: `Yag_admin` , **password:** `Yag@admin1`
+        2. username: `yagadmin2` , **password:** `Yag@admin2`
+
+        **Manager**
+
+        1. username: `Yag_manager1` , **password:** `Yag@manager1`
+        2. username: `Yag_manager2` , **password:** `Yag@manager2`
+
+        **Employee**
+
+        1. username: `Yag_employee1` , **password:** `Yag@employee1`
+        2. username: `Yag_employee2` , **password:** `Yag@employee3`
+        3. username: `Yag_employee3` , **password:** `Yag@employee2`
+
+        ### Step 2: Get Your Token
+        Send a POST request to `/api/users/login/` with JSON body:
+
+        {
+            "identifier": "<username>",
+            "password": "<password>"
+        }
+                
         ### Step 3: Try It Out
         All protected endpoints will now work with your token automatically.
         
