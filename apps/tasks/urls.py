@@ -10,4 +10,5 @@ urlpatterns = [
     path('<int:task_id>/complete/', views.mark_task_complete, name='mark_task_complete'),
     path('<int:task_id>/deadline/', views.update_task_deadline, name='update_task_deadline'),
     path('filter/status/', views.filter_by_status, name='filter_by_status'),
+    path('filter-by-deadline/', views.filter_by_deadline, name='filter-by-deadline'),
 ]
