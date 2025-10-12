@@ -160,4 +160,28 @@ def filter_by_status(request):
 @api_view(['GET'])
 @permission_classes([TaskPermission])
 def filter_by_deadline(request):
-    return
+    deadline_str = request.query_params.get("date")
+    if not deadline_str:
+        return Response(
+            {"error": "Please provide a 'date' query parameter in YYYY-MM-DD format."},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    try:
+        deadline = datetime.strptime(deadline_str, "%Y-%m-%d").date()
+    except ValueError:
+        return Response(
+            {"error":"Invalid date format, Use YYYY-MM-DD"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    user = request.user
+    if user.role == 'ADMIN':
+        tasks = Task.objects.filter(deadline__lte=deadline)
+    else:
+        tasks = Task.objects.filter(deadline__lte=deadline, assigned_to=user)
+
+    paginator = TaskPagination()
+    paginated_tasks = paginator.paginate_queryset(tasks.order_by('-deadline'), request)
+    serializer = TaskSerializer(paginated_tasks, many=True, context={'request': request})
+    return paginator.get_paginated_response(serializer.data)
