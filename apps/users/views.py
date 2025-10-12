@@ -93,7 +93,7 @@ from apps.tasks.permissions import TaskPermission
     tags=['Admin']
 )
 @api_view(['GET'])
-@permission_classes([IsAuthenticated, TaskPermission])  # Only admins can access
+@permission_classes([])  # Only admins can access
 def get_all_user(request):
     """
     Get all users in the system.

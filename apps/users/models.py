@@ -10,7 +10,7 @@ class UserModel(AbstractUser):
     first_name = models.CharField(max_length=50)
     middle_name = models.CharField(max_length=50, blank=True, null=True)
     last_name = models.CharField(max_length=50)
-    date_of_birth = models.DateField()
+    date_of_birth = models.DateField(blank=True,null=True)
     role = models.CharField(max_length=20, choices=Roles.choices, default=Roles.EMPLOYEE)
 
     def __str__(self):

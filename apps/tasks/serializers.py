@@ -16,7 +16,7 @@ class TaskSerializer(serializers.ModelSerializer):
     assigned_by = serializers.StringRelatedField(read_only=True)  # show username/email
     assigned_to = serializers.PrimaryKeyRelatedField(
         many=True,
-        queryset=UserModel.objects.filter(role='EMPLOYEE')  # only employees  # will set dynamically in view
+        queryset=UserModel.objects.filter(role='employee')  # only employees  # will set dynamically in view
     )
     
     class Meta:

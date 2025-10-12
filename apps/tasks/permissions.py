@@ -16,15 +16,15 @@ class TaskPermission(BasePermission):
             return False
 
         # Admin can do everything
-        if user.role == 'ADMIN':
+        if user.role == 'admin':
             return True
 
         # Managers can create tasks
-        if request.method == 'POST' and user.role == 'MANAGER':
+        if request.method == 'POST' and user.role == 'manager':
             return True
 
         # Employees cannot create tasks
-        if request.method == 'POST' and user.role == 'EMPLOYEE':
+        if request.method == 'POST' and user.role == 'employee':
             return False
 
         # For GET, PUT, PATCH, DELETE → allow and check object-level later
@@ -34,17 +34,17 @@ class TaskPermission(BasePermission):
         user = request.user
 
         # Admin can do everything
-        if user.role == 'ADMIN':
+        if user.role == 'admin':
             return True
 
         # Manager can update/delete tasks they assigned
-        if user.role == 'MANAGER':
+        if user.role == 'manager':
             if request.method in ['PUT', 'PATCH', 'DELETE']:
                 return obj.assigned_by == user
             return True  # GET is allowed
 
         # Employee can only view or update tasks assigned to them
-        if user.role == 'EMPLOYEE':
+        if user.role == 'employee':
             if request.method in ['PUT', 'PATCH']:
                 return user in obj.assigned_to.all()
             if request.method == 'GET':
