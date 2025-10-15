@@ -1,47 +1,49 @@
-# # Builder stage
-# FROM python:3.12-alpine AS builder
+FROM python:3.13-alpine AS builder
 
-# ENV PYTHONDONTWRITEBYTECODE=1 \
-#     PYTHONUNBUFFERED=1 \
-#     PIP_NO_CACHE_DIR=1 \
-#     PIP_DISABLE_PIP_VERSION_CHECK=1
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
 
-# RUN apk add --no-cache \
-#     build-base \
-#     libffi-dev \
-#     zlib-dev \
-#     jpeg-dev \
-#     musl-dev \
-#     bash \
-#     curl \
-#     gettext \
-#     git \
-#     sqlite-dev
+RUN apk add --no-cache \
+    build-base \
+    libffi-dev \
+    zlib-dev \
+    jpeg-dev \
+    musl-dev \
+    bash \
+    curl \
+    gettext \
+    git \
+    sqlite-dev \
+    mariadb-dev \
+    postgresql-dev
 
-# WORKDIR /app
+WORKDIR /app
 
-# COPY requirements.txt .
+COPY requirements.txt .
 
-# RUN pip install --upgrade pip setuptools wheel \
-#     && pip install --prefix=/install -r requirements.txt
+RUN pip install --upgrade pip setuptools wheel \
+    && pip install --prefix=/install -r requirements.txt
 
-# # Runtime stage
-# FROM python:3.12-alpine AS runtime
+FROM python:3.13-alpine AS runtime
 
-# ENV PYTHONDONTWRITEBYTECODE=1 \
-#     PYTHONUNBUFFERED=1 \
-#     PATH="/usr/local/bin:/install/bin:$PATH"
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PATH="/usr/local/bin:/install/bin:$PATH"
 
-# WORKDIR /app
+WORKDIR /app
 
-# COPY --from=builder /install /usr/local
-# COPY . /app
+COPY --from=builder /install /usr/local
 
-# RUN addgroup -S app && adduser -S app -G app \
-#     && chown -R app:app /app
+COPY . /app
 
-# USER app
+RUN addgroup -S app && adduser -S app -G app \
+    && chown -R app:app /app
 
-# EXPOSE 8000
+USER app
 
-# ENTRYPOINT ["/app/entrypoint.sh"]
+
+EXPOSE 8000
+
+ENTRYPOINT ["/app/entrypoint.sh"]
